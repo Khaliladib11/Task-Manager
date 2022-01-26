@@ -1,0 +1,26 @@
+{
+  "name": "task-manager",
+  "version": "1.0.0",
+  "description": "Project to Practice building node js APIs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Khaliladib11/Task-Manager.git"
+  },
+  "author": "Khalil Adib",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Khaliladib11/Task-Manager/issues"
+  },
+  "homepage": "https://github.com/Khaliladib11/Task-Manager#readme",
+  "dependencies": {
+    "dotenv": "^14.3.2",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
