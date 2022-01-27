@@ -18,7 +18,8 @@
   "homepage": "https://github.com/Khaliladib11/Task-Manager#readme",
   "dependencies": {
     "dotenv": "^14.3.2",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "pg": "^8.7.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
