@@ -1,7 +1,15 @@
 
+const db = require('../config/database');
 
-const getAllTasks = (req, res) => {
-    res.send('get all tasks')
+
+
+const getAllTasks = (req, res, next) => {
+    db.query('SELECT * FROM TASKS', (err, response) => {
+        if(err){
+            return next(err)
+        }
+        res.status(200).send(response.rows)
+    })
 }
 
 const createTask = (req, res) => {
