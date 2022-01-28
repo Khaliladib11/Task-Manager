@@ -1,14 +1,13 @@
-const db = require('../config/database');
+const model = require('./model');
 
-class Task{
-    constructor(title='title', description='description'){
-        this.title = title;
-        this.description = description;
+class Task extends model{
+    constructor(){
+        super();
     }
 
     async getTaskbyId(id) {
         try{
-            const { rows } = await db.query(
+            const { rows } = await this.getDB().query(
                 `SELECT * FROM tasks WHERE task_id = $1;`,
                 [id]
             );
@@ -19,11 +18,11 @@ class Task{
         }
     }
 
-    async createTask () {
+    async createTask (title, description) {
         try{
-            const { rows } = await db.query(
+            const { rows } = await this.getDB().query(
                 `INSERT INTO tasks (name, description) VALUES ($1, $2);`,
-                [this.title, this.description]
+                [title, description]
             );
             
             return rows;
@@ -32,9 +31,9 @@ class Task{
         }
     }
 
-    static async getAllTasks(){
+    async getAllTasks(){
         try{
-            const { rows } = await db.query(
+            const { rows } = await this.getDB().query(
                 'SELECT * FROM tasks;'
             );
             
@@ -44,11 +43,11 @@ class Task{
         }
     }
 
-    async updateTask(id){
+    async updateTask(id, title, description){
         try{
-            const { rows } = await db.query(
+            const { rows } = await this.getDB().query(
                 `UPDATE tasks SET name=$1, description=$2 WHERE task_id=$3;`,
-                [this.title, this.description, id]
+                [title, description, id]
             )
             return rows;
         }catch(error){
@@ -58,7 +57,7 @@ class Task{
 
     async deleteTask(id){
         try{
-            const { rows } = await db.query(
+            const { rows } = await this.getDB().query(
                 `DELETE FROM tasks WHERE task_id=$1;`,
                 [id]
             )

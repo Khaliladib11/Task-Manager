@@ -1,11 +1,12 @@
 
-const db = require('../config/database');
-const Task = require('../models/task');
+const Task = require('../models/tasks-model');
+
+const TaskModel = new Task();
 
 const getAllTasks = async (req, res, next) => {
 
     try{
-        const result = await Task.getAllTasks();
+        const result = await TaskModel.getAllTasks();
         res.status(200).send({
             status: 200,
             body: {
@@ -15,6 +16,7 @@ const getAllTasks = async (req, res, next) => {
             }
         })
     }catch(error){
+        res.status(500).json({msg: error})
         next(error);
     }
 }
@@ -22,8 +24,7 @@ const getAllTasks = async (req, res, next) => {
 const createTask = async (req, res, next) => {
     const {title, description} = req.body;
     try{
-        const task = new Task(title, description);
-        results = await task.createTask();
+        results = await TaskModel.createTask(title, description);
         res.status(201).send({
             status: 200,
             body: {
@@ -37,12 +38,9 @@ const createTask = async (req, res, next) => {
 }
 
 const getTask = async (req, res, next) => {
-    //console.log(typeof(id))
-    //res.json({id:req.params.id})
     try{
         const id = parseInt(req.params.id)
-        const task = new Task();
-        results = await task.getTaskbyId(id);
+        results = await TaskModel.getTaskbyId(id);
         res.status(201).send({
             status: 200,
             body: {
@@ -61,8 +59,7 @@ const updateTask = async (req, res, next) => {
     try{
         const id = parseInt(req.params.id)
         const {title, description} = req.body;
-        const task = new Task(title, description);
-        results = await task.updateTask(id);
+        results = await TaskModel.updateTask(id, title, description);
         res.status(201).send({
             status: 200,
             body: {
@@ -80,8 +77,7 @@ const updateTask = async (req, res, next) => {
 const deleteTask = async (req, res, next) => {
     try{
         const id = parseInt(req.params.id)
-        const task = new Task();
-        results = await task.deleteTask(id);
+        results = await TaskModel.deleteTask(id);
         res.status(201).send({
             status: 200,
             body: {
