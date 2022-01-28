@@ -1,7 +1,6 @@
 const {Pool} = require('pg')
 
 const dotenv = require('dotenv');
-const { text } = require('express');
 dotenv.config();
 
 const credentials = {
@@ -18,6 +17,25 @@ pool.on('connect', () => {
     console.log("Connec to Postgres database")
 })
 
+
 module.exports = {
-    query: (text, params) => pool.query(text, params),
+    async query(text, params){
+        // invocation timestamp for the query method
+        const start = Date.now()
+
+        try{
+            const res = await pool.query(text, params);
+            // time elapsed since invocatio to execution
+            const duration = Date.now() - start;
+
+            console.log(
+                'executed query',
+                {text, duration, rows: res.rowCount}
+            );
+            return res;
+        } catch(error){
+            console.log('error in query', {text})
+            throw error;
+        }
+    }
 }

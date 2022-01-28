@@ -1,19 +1,39 @@
 
 const db = require('../config/database');
+const Task = require('../models/task');
 
+const getAllTasks = async (req, res, next) => {
 
-
-const getAllTasks = (req, res, next) => {
-    db.query('SELECT * FROM TASKS', (err, response) => {
-        if(err){
-            return next(err)
-        }
-        res.status(200).send(response.rows)
-    })
+    try{
+        const result = await Task.getAllTasks();
+        res.status(200).send({
+            status: 200,
+            body: {
+                tasks: {
+                    result
+                }
+            }
+        })
+    }catch(error){
+        next(error);
+    }
 }
 
-const createTask = (req, res) => {
-    res.json(req.body)
+const createTask = async (req, res, next) => {
+    const {title, description} = req.body;
+    console.log(title, description)
+    try{
+        const task = new Task(title, description);
+        results = await task.createTask();
+        res.status(201).send({
+            status: 200,
+            body: {
+                task: {title, description}
+            }
+        })
+    }catch(error){
+        next(error);
+    }
 }
 
 const getTask = (req, res) => {
