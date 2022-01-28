@@ -14,7 +14,7 @@ const credentials = {
 const pool = new Pool(credentials)
 
 pool.on('connect', () => {
-    console.log("Connec to Postgres database")
+    console.log("Connect to Postgres database")
 })
 
 
