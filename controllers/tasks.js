@@ -21,7 +21,6 @@ const getAllTasks = async (req, res, next) => {
 
 const createTask = async (req, res, next) => {
     const {title, description} = req.body;
-    console.log(title, description)
     try{
         const task = new Task(title, description);
         results = await task.createTask();
@@ -32,20 +31,69 @@ const createTask = async (req, res, next) => {
             }
         })
     }catch(error){
+        res.status(500).json({msg: error})
         next(error);
     }
 }
 
-const getTask = (req, res) => {
-    res.json({id:req.params.id})
+const getTask = async (req, res, next) => {
+    //console.log(typeof(id))
+    //res.json({id:req.params.id})
+    try{
+        const id = parseInt(req.params.id)
+        const task = new Task();
+        results = await task.getTaskbyId(id);
+        res.status(201).send({
+            status: 200,
+            body: {
+                task: {
+                    results
+                }
+            }
+        })
+    }catch(error){
+        res.status(500).json({msg: error})
+        next(error);
+    }
 }
 
-const updateTask = (req, res) => {
-    res.send('update task')
+const updateTask = async (req, res, next) => {
+    try{
+        const id = parseInt(req.params.id)
+        const {title, description} = req.body;
+        const task = new Task(title, description);
+        results = await task.updateTask(id);
+        res.status(201).send({
+            status: 200,
+            body: {
+                task: {
+                    results
+                }
+            }
+        })
+    }catch(error){
+        res.status(500).json({msg: error})
+        next(error);
+    }
 }
 
-const deleteTask = (req, res) => {
-    res.send('delete task')
+const deleteTask = async (req, res, next) => {
+    try{
+        const id = parseInt(req.params.id)
+        const task = new Task();
+        results = await task.deleteTask(id);
+        res.status(201).send({
+            status: 200,
+            body: {
+                task: {
+                    results
+                }
+            }
+        })
+    }catch(error){
+        res.status(500).json({msg: error})
+        next(error);
+    }
 }
 
 module.exports = {
