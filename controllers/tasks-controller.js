@@ -7,7 +7,7 @@ const getAllTasks = async (req, res, next) => {
 
     try{
         const result = await TaskModel.getAllTasks();
-        res.status(200).send({
+        res.status(200).json({
             status: 200,
             body: {
                 tasks: {
@@ -21,34 +21,48 @@ const getAllTasks = async (req, res, next) => {
     }
 }
 
-const createTask = async (req, res, next) => {
-    const {title, description} = req.body;
+const getTaskbyId = async (req, res, next) => {
     try{
-        results = await TaskModel.createTask(title, description);
-        res.status(201).send({
-            status: 200,
+        const id = parseInt(req.params.id)
+        results = await TaskModel.getTaskbyId(id);
+        if(results.length === 0){
+            res.status(404).json({
+                status: 404,
+                msg: `No task with ID : ${id}`
+                })
+        }
+        res.status(201).json({
+            status: 201,
             body: {
-                task: {title, description}
-            }
-        })
+                task: {
+                    results
+                    }
+                }
+            })
     }catch(error){
         res.status(500).json({msg: error})
         next(error);
     }
 }
 
-const getTask = async (req, res, next) => {
+const createTask = async (req, res, next) => {
     try{
-        const id = parseInt(req.params.id)
-        results = await TaskModel.getTaskbyId(id);
-        res.status(201).send({
-            status: 200,
-            body: {
-                task: {
-                    results
+        const {title, description} = req.body;
+        results = await TaskModel.createTask(title, description);
+        if(results.length === 0){
+            res.status(500).json({
+                status: 500,
+                msg: "Task not created"
+            })
+        } 
+        else{
+            res.status(201).json({
+                status: 201,
+                body: {
+                    task: results
                 }
-            }
-        })
+            })
+        }
     }catch(error){
         res.status(500).json({msg: error})
         next(error);
@@ -60,14 +74,21 @@ const updateTask = async (req, res, next) => {
         const id = parseInt(req.params.id)
         const {title, description} = req.body;
         results = await TaskModel.updateTask(id, title, description);
-        res.status(201).send({
-            status: 200,
-            body: {
-                task: {
-                    results
+        if(results.length === 0){
+            res.status(500).json({
+                status: 500,
+                msg: "Task not updated"
+            })
+        } 
+        else{
+            res.status(201).json({
+                status: 201,
+                body: {
+                    task: results
                 }
-            }
-        })
+            })
+        }
+    
     }catch(error){
         res.status(500).json({msg: error})
         next(error);
@@ -78,14 +99,20 @@ const deleteTask = async (req, res, next) => {
     try{
         const id = parseInt(req.params.id)
         results = await TaskModel.deleteTask(id);
-        res.status(201).send({
-            status: 200,
-            body: {
-                task: {
-                    results
+        if(results.length === 0){
+            res.status(500).json({
+                status: 500,
+                msg: `No task with id : ${id}`
+            })
+        } 
+        else{
+            res.status(200).json({
+                status: 200,
+                body: {
+                    task: "Task deleted successfully"
                 }
-            }
-        })
+            })
+        }
     }catch(error){
         res.status(500).json({msg: error})
         next(error);
@@ -95,7 +122,7 @@ const deleteTask = async (req, res, next) => {
 module.exports = {
     getAllTasks,
     createTask,
-    getTask,
+    getTaskbyId,
     updateTask,
     deleteTask
 }
